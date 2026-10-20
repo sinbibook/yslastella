@@ -1,0 +1,43 @@
+<div class="footer_wrap">
+  <div class="footer inner">
+    <div class="ft_link">
+      <ul>
+        <li><a href="./main.html">ABOUT</a></li>
+        <li><a href="./room.html" data-footer-room-link>ROOMS</a></li>
+        <li><a href="./facility.html">SPECIAL</a></li>
+        <li><a href="./reservation.html">RESERVE</a></li>
+      </ul>
+    </div>
+    <!-- data-* 속성 : data-footer-rural-stay-mark-wrap (customFields.footer.ruralStayMark 가 있을 때만 노출, 기본 숨김)
+         data-footer-rural-stay-mark : 농어촌민박사업자 이미지 (표시마크 + 신고번호, alt = description) -->
+    <div class="ft_rural_stay_mark_wrap" data-footer-rural-stay-mark-wrap style="display: none">
+      <img class="ft_rural_stay_mark" src="" alt="농어촌민박사업자" data-footer-rural-stay-mark />
+    </div>
+    <!-- data-* 속성 : data-footer-phone (property.contactPhone) / data-footer-phone-link (tel: 링크) -->
+    <div class="ft_tel">
+      <a href="tel:" data-footer-phone-link>T.<span data-footer-phone>070-0000-0000</span></a>
+    </div>
+    <div class="ft_info">
+      <ul>
+        <!-- data-* 속성 : data-footer-business-name (property.businessInfo.businessName) -->
+        <li><span>상호</span> : <span data-footer-business-name>상호명</span></li>
+        <!-- data-* 속성 : data-footer-address (property.businessInfo.businessAddress) -->
+        <li><span>도로명</span> : <span data-footer-address>주소</span></li>
+        <!-- data-* 속성 : data-footer-business-number (property.businessInfo.businessNumber) -->
+        <li><span>사업자번호</span> : <span data-footer-business-number>000-00-00000</span></li>
+        <!-- data-* 속성 : data-footer-representative (property.businessInfo.representativeName) -->
+        <li><span>대표자</span> : <span data-footer-representative>대표자명</span></li>
+      </ul>
+    </div>
+    <div class="ft_copy">
+      <!-- copyright : property.tripProviderName 으로 치환 (data-copyright), 값이 없으면 아래 문구 유지 -->
+      <p class="copy">
+        <a href="http://trip11.kr/" target="_blank" data-copyright="COPYRIGHT©{provider}. ALL RIGHTS RESERVED.">COPYRIGHT©(주)트립일레븐. ALL RIGHTS RESERVED.</a>
+      </p>
+      <!-- 개인정보처리방침 : 트립일레븐 공통 약관 페이지 (정적 링크 유지) -->
+      <a href="http://design.trip11.net/privacy/privacy_policy.html" class="privacy" target="_blank"
+        ><span>개인정보처리방침</span></a
+      >
+    </div>
+  </div>
+</div>
