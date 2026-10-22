@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "version": "1.1.0",
-    "generatedAt": "2026-10-21T01:04:25.469824888Z",
+    "version": "1.2.0",
+    "generatedAt": "2026-10-22T00:57:01.810711093Z",
     "templateType": "trip_d",
     "propertyId": "27fda8e7-f9c1-4b56-bfae-a5c966e196cd",
     "homepageId": "01a1584f-9fbd-7547-bf24-196f56ea7264"
@@ -2004,11 +2004,19 @@
             "title": "",
             "images": [
               {
-                "id": "01a15850-0134-7b6c-a818-459fe9f69d8b",
-                "url": "https://jlnjajtcnyqupfaqjerz.supabase.co/storage/v1/object/public/app-images/homepage/01a1584f-9fbd-7547-bf24-196f56ea7264/popup/1792482980567-xqa3h4z5ii.jpg",
-                "sortOrder": 0,
+                "id": "01a1611c-7bac-7744-9d92-a5d40a64dd35",
+                "url": "https://jlnjajtcnyqupfaqjerz.supabase.co/storage/v1/object/public/app-images/homepage/01a1584f-9fbd-7547-bf24-196f56ea7264/popup/1792630618401-2letud20p5.jpg",
+                "sortOrder": 1,
                 "description": "",
                 "isSelected": true,
+                "blockId": "c75d089d-c07a-4618-9ebc-3fd6c4d2fc92"
+              },
+              {
+                "id": "01a15850-0134-7b6c-a818-459fe9f69d8b",
+                "url": "https://jlnjajtcnyqupfaqjerz.supabase.co/storage/v1/object/public/app-images/homepage/01a1584f-9fbd-7547-bf24-196f56ea7264/popup/1792482980567-xqa3h4z5ii.jpg",
+                "sortOrder": 2,
+                "description": "",
+                "isSelected": false,
                 "blockId": "c75d089d-c07a-4618-9ebc-3fd6c4d2fc92"
               }
             ],
@@ -2028,7 +2036,7 @@
               {
                 "id": "01a15850-0135-763e-9ccc-ac13aa08c60d",
                 "url": "https://jlnjajtcnyqupfaqjerz.supabase.co/storage/v1/object/public/app-images/homepage/01a1584f-9fbd-7547-bf24-196f56ea7264/popup/1792482981068-7hkx5m16jm.jpg",
-                "sortOrder": 1,
+                "sortOrder": 0,
                 "description": "",
                 "isSelected": true,
                 "blockId": "ca60db71-40a5-428e-a532-e38ef7d4f971"
