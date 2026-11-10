@@ -221,7 +221,20 @@
     return list.length > 0 ? list : [fallbackPhone];
   };
 
-  // ── SEO 메타태그 업데이트 ──────────────────────────────────────
+  // ── 객실 ──────────────────────────────────────────────────
+  // 객실명. 백오피스에서 저장한 roomtypes[] 는 {id, images} 만 남아 name 이 없는 경우가 흔하다.
+  // 그때는 같은 id 의 rooms[].name(객실관리 객실명)으로 폴백한다 (D2 · G 와 같은 규칙).
+  BaseDataMapper.prototype.getRoomtypeName = function (roomtype) {
+    if (!roomtype) return '';
+    var own = String(roomtype.name || '').trim();
+    if (own) return own;
+    var rooms = (this.data && this.data.rooms) || [];
+    for (var i = 0; i < rooms.length; i++) {
+      if (rooms[i].id === roomtype.id) return String(rooms[i].name || '').trim();
+    }
+    return '';
+  };
+
   BaseDataMapper.prototype.getRoomGroupName = function (roomtype) {
     return String((roomtype && roomtype.groupName) || '').trim();
   };
@@ -235,7 +248,7 @@
     var self = this;
     var list = roomtypes || [];
     if (!this.hasRoomGroups(list)) {
-      return list.map(function (rt) { return { label: resolveName ? resolveName(rt) : (rt && rt.name) || '', roomtype: rt, roomtypes: [rt] }; });
+      return list.map(function (rt) { return { label: resolveName ? resolveName(rt) : self.getRoomtypeName(rt), roomtype: rt, roomtypes: [rt] }; });
     }
     var seen = {};
     var items = [];
@@ -246,7 +259,7 @@
       // (Room Preview 는 roomtypes[] 전체를 그리므로 영향 없다)
       if (!groupName) return;
 
-      var label = groupName || (resolveName ? resolveName(rt) : (rt && rt.name) || '');
+      var label = groupName || (resolveName ? resolveName(rt) : self.getRoomtypeName(rt));
       if (!String(label).trim()) return;
       var key = groupName ? 'group:' + groupName : 'room:' + rt.id;
       if (!seen[key]) { seen[key] = { label: label, groupName: groupName, roomtype: rt, roomtypes: [rt] }; items.push(seen[key]); }
@@ -283,7 +296,7 @@
     if (this.isLayoutMapEnabled()) return 'layout-map.html';
     var self = this;
     var link = null;
-    this.getRoomMenuItems(roomtypes, function (rt) { return (rt && rt.name) || ''; }).some(function (item) {
+    this.getRoomMenuItems(roomtypes, function (rt) { return self.getRoomtypeName(rt); }).some(function (item) {
       if (!String(self.getRoomMenuLabel(item)).trim()) return false;
       link = self.getRoomMenuLink(item);
       return true;

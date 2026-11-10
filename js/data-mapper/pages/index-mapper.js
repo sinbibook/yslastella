@@ -322,7 +322,7 @@
     var self = this;
     var rooms = (this.data && this.data.rooms) || [];
     var roomtypes = this.getRoomtypes().filter(function (rt) {
-      if (!(rt && rt.name && rt.name.trim())) return false;
+      if (!self.getRoomtypeName(rt)) return false;
       var matched = rooms.filter(function (r) { return r.id === rt.id; })[0];
       return !(matched && matched.status === 'inactive');
     });
@@ -337,7 +337,7 @@
       // 원본이 내려둔 객실은 카드도 내지 않는다 — 그룹도 없고 사진도 없으면 보여줄 게 없다.
       // 크롤러가 이름·사진을 못 읽은 경우는 groupName 이 남아 있어 여기서 걸리지 않는다.
       if (rt && !self.getRoomGroupName(rt) && !(rt.images || []).length) return;
-      var roomLabel = (rt && rt.name) || '';
+      var roomLabel = self.getRoomtypeName(rt);
       if (!String(roomLabel).trim() || !rt) return;
       var thumbs = (rt.images || []).filter(function (img) { return img.category === 'roomtype_thumbnail'; });
       var selected = thumbs.filter(function (t) { return t.isSelected; });

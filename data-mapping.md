@@ -83,6 +83,7 @@ roomStructures[0] + "/ " + 값≥1인 항목들 나열
 >   하나라도 불충족이면 보정 없이 원본 로고를 그대로 쓴다(기존 동작).
 >   | `data-booking-link` | 예약하기 `<a>` (PC/aside/allmenu + 모바일 플로팅, href 직접 주입) | `property.realtimeBookingId` |
 >   | `data-ybs-button` | YBS `<a>` (PC/MO) | `property.ybsId` (없으면 숨김, `https://www.yapen.co.kr/external?ypIdx={ybsId}`) |
+>   | `data-ybs-badge` | 예약하기 위 「특가」 배지 `<img>` (PC/MO) | `property.ybsId` 가 있을 때만 노출 (기본 숨김) |
 >   | `data-rooms-submenu` | ROOMS 서브메뉴 컨테이너 `<ul>` (3곳) | — (동적 생성 기준점) |
 >   | `data-room-menu-link` | 미리보기 링크 (`/layout-map.html`) | — (동적 생성 앵커, 이 뒤에 객실 `<li>` 추가) |
 >   | `data-facility-menu-link` | SPECIAL 서브메뉴 컨테이너 `<ul>` (3곳) | `property.facilities[].name` (컨테이너 비우고 동적 생성) |
@@ -311,8 +312,8 @@ hero.images[isSelected] 기준:
 | `data-room-name`           | info `.btxt` + 표 객실명(PC/모바일)        | `roomtypes[current].name`                                                                            |
 | `data-room-structure`      | info `.stxt` + 표 유형(PC/모바일)          | `rooms[j].roomStructures[0] + "/ " + totalRoomCount 값≥1 한글` (id 매칭)                             |
 | `data-room-image-main`     | info `.fl .img p` (배경)                   | `roomtypes[current]` interior[0]                                                                     |
-| `data-room-thumbs`         | info `.fr ul` (li 배경, 2칸)               | `roomtypes[current]` interior 순서대로                                                               |
-| `data-room-thumbs-m`       | info `.mobile ul` (li>img, 2칸)            | `roomtypes[current]` interior 순서대로                                                               |
+| `data-room-thumbs`         | info `.fr ul` (li 배경, 2칸)               | `roomtypes[current]` interior 4·5번째(`[3]`, `[4]`)                                                  |
+| `data-room-thumbs-m`       | info `.mobile ul` (li>img, 2칸)            | PC 와 같은 interior 4·5번째(`[3]`, `[4]`) — 예전엔 1·2번째라 PC 와 사진이 달랐다                      |
 | `data-room-intro`          | `.inst h3`                                 | `rooms[j].roomInfo` (영문 `.stit`은 정적)                                                            |
 | `data-room-base-occupancy` | 표 기준(PC/모바일)                         | `rooms[j].baseOccupancy`                                                                             |
 | `data-room-max-occupancy`  | 표 최대(PC/모바일)                         | `rooms[j].maxOccupancy`                                                                              |

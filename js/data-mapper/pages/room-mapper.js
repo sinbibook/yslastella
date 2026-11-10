@@ -144,7 +144,7 @@
     var preview = nav.querySelector('li:not([data-generated])');
     if (preview) preview.style.display = this.isLayoutMapEnabled() ? '' : 'none';
     var self = this;
-    var roomItems = this.getRoomMenuItems(this.getRoomtypes(), function (rt) { return (rt && rt.name) || ''; });
+    var roomItems = this.getRoomMenuItems(this.getRoomtypes(), function (rt) { return self.getRoomtypeName(rt); });
     // 그룹 안이면 그 그룹의 객실만 펼친다.
     // 헤더/미리보기 메뉴는 그룹명 하나로 접히고 클릭 시 그룹의 첫 객실로 들어가는데,
     // 이 탭까지 접혀 있으면 2번째 객실부터는 UI 로 도달할 방법이 없다.
@@ -156,7 +156,7 @@
     });
     if (activeGroup) {
       roomItems = activeGroup.roomtypes.map(function (rt) {
-        return { label: (rt && rt.name) || '', roomtype: rt, roomtypes: [rt] };
+        return { label: self.getRoomtypeName(rt), roomtype: rt, roomtypes: [rt] };
       });
     }
     roomItems.forEach(function (item) {
@@ -177,7 +177,7 @@
   RoomMapper.prototype.mapInfo = function () {
     var rt = this.getCurrentRoomtype();
     var room = this.getMatchedRoom(rt);
-    setText('[data-room-name]', rt && rt.name);
+    setText('[data-room-name]', this.getRoomtypeName(rt));
     setText('[data-room-structure]', buildRoomStructure(room));
 
     var interior = this.getInteriorImages(rt);
@@ -193,10 +193,12 @@
     }
 
     // 썸네일 (fr): li 배경 (interior[3], interior[4])
+    // 모바일 조각컷도 같은 장을 쓴다 — 예전에는 모바일만 interior[0], [1] 이라 PC 와 사진이 달랐다.
+    var THUMB_OFFSET = 3;
     var thumbs = document.querySelector('[data-room-thumbs]');
     if (thumbs) {
       thumbs.querySelectorAll('li').forEach(function (li, i) {
-        var img = interior[i + 3];
+        var img = interior[i + THUMB_OFFSET];
         if (img && img.url) {
           li.style.background = 'url(' + img.url + ') no-repeat center center';
         } else {
@@ -205,11 +207,11 @@
       });
     }
 
-    // 썸네일 (mobile): li > img
+    // 썸네일 (mobile): li > img — PC 와 같은 interior[3], [4]
     var thumbsM = document.querySelector('[data-room-thumbs-m]');
     if (thumbsM) {
       thumbsM.querySelectorAll('li img').forEach(function (img, i) {
-        var src = interior[i];
+        var src = interior[i + THUMB_OFFSET];
         if (src && src.url) {
           img.src = src.url;
           img.alt = '';
@@ -289,7 +291,7 @@
     var self = this;
     var rooms = (this.data && this.data.rooms) || [];
     var roomtypes = this.getRoomtypes().filter(function (rt) {
-      if (!(rt && rt.name && rt.name.trim())) return false;
+      if (!self.getRoomtypeName(rt)) return false;
       var matched = rooms.filter(function (r) { return r.id === rt.id; })[0];
       return !(matched && matched.status === 'inactive');
     });
@@ -301,7 +303,7 @@
     // 그룹으로 접히는 곳은 헤더 ROOMS 메뉴와 객실 상세 탭뿐이고,
     // 카드는 저마다 자기 객실 상세로 연결한다.
     roomtypes.forEach(function (rt) {
-      var roomLabel = (rt && rt.name) || '';
+      var roomLabel = self.getRoomtypeName(rt);
       if (!String(roomLabel).trim() || !rt) return;
       var thumbs = (rt.images || []).filter(function (img) { return img.category === 'roomtype_thumbnail'; });
       var selected = thumbs.filter(function (t) { return t.isSelected; });
