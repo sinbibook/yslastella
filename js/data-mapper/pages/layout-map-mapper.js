@@ -121,7 +121,7 @@
     if (!nav) return;
     nav.querySelectorAll('[data-generated="nav"]').forEach(function (li) { li.remove(); });
     var self = this;
-    var roomItems = this.getRoomMenuItems(this.getRoomtypes(), function (rt) { return (rt && rt.name) || ''; });
+    var roomItems = this.getRoomMenuItems(this.getRoomtypes(), function (rt) { return self.getRoomtypeName(rt); });
     roomItems.forEach(function (item) {
       var name = self.getRoomMenuLabel(item);
       if (!String(name).trim()) return;
@@ -141,7 +141,7 @@
     var self = this;
     var rooms = (this.data && this.data.rooms) || [];
     var roomtypes = this.getRoomtypes().filter(function (rt) {
-      if (!(rt && rt.name && rt.name.trim())) return false;
+      if (!self.getRoomtypeName(rt)) return false;
       var matched = rooms.filter(function (r) { return r.id === rt.id; })[0];
       return !(matched && matched.status === 'inactive');
     });
@@ -153,7 +153,7 @@
     // 그룹으로 접히는 곳은 헤더 ROOMS 메뉴와 객실 상세 탭뿐이고,
     // 카드는 저마다 자기 객실 상세로 연결한다.
     roomtypes.forEach(function (rt) {
-      var roomLabel = (rt && rt.name) || '';
+      var roomLabel = self.getRoomtypeName(rt);
       if (!String(roomLabel).trim() || !rt) return;
       var thumbs = (rt.images || []).filter(function (img) { return img.category === 'roomtype_thumbnail'; });
       var selected = thumbs.filter(function (t) { return t.isSelected; });

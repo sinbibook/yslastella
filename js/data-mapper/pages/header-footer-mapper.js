@@ -169,8 +169,12 @@
   };
 
   // MAPPER: property.ybsId → [data-ybs-button] (없으면 숨김)
+  //                        → [data-ybs-badge] 예약하기 위 「특가」 배지 (운영 요청: YBS 가 켜진 숙소만)
   HeaderFooterMapper.prototype.mapYbs = function () {
     var ybsId = this.getProperty().ybsId;
+    document.querySelectorAll('[data-ybs-badge]').forEach(function (el) {
+      el.style.display = ybsId ? '' : 'none';
+    });
     document.querySelectorAll('[data-ybs-button]').forEach(function (el) {
       if (!ybsId) {
         el.style.display = 'none';
@@ -270,7 +274,7 @@
   // MAPPER: roomtypes[].name → [data-rooms-submenu] (data-room-menu-link 앵커 뒤에 li 동적 생성)
   HeaderFooterMapper.prototype.mapRoomMenu = function () {
     var self = this;
-    var roomItems = this.getRoomMenuItems(this.getRoomtypes(), function (rt) { return (rt && rt.name) || ''; });
+    var roomItems = this.getRoomMenuItems(this.getRoomtypes(), function (rt) { return self.getRoomtypeName(rt); });
     document.querySelectorAll('[data-rooms-submenu]').forEach(function (container) {
       container.querySelectorAll('[data-generated="room"]').forEach(function (li) { li.remove(); });
       roomItems.forEach(function (item) {
@@ -281,6 +285,8 @@
         var a = document.createElement('a');
         a.href = self.getRoomMenuLink(item);
         a.textContent = name;
+        // 긴 객실명은 CSS 로 한 줄 말줄임한다 — 전체 이름은 툴팁으로 보여준다
+        a.title = name;
         li.appendChild(a);
         container.appendChild(li);
       });
@@ -376,19 +382,31 @@
   // 프리뷰는 같은 페이지에서 다시 매핑하므로 매번 표시 상태를 되돌린다.
   HeaderFooterMapper.prototype.mapFooterRuralStayMark = function () {
     var footer = this.getCustomFields().footer || {};
-    var mark = footer.ruralStayMark;
-    var markUrl = mark && mark.url ? String(mark.url) : '';
+    var footerMarks = footer;
+    var marks = Array.isArray(footerMarks.ruralStayMarks)
+      ? footerMarks.ruralStayMarks.slice(0, 2)
+      : [footerMarks.ruralStayMark];
+    var markUrl = marks.some(function (mark) { return mark && mark.url; });
 
     document.querySelectorAll('[data-footer-rural-stay-mark-wrap]').forEach(function (wrap) {
       wrap.style.display = markUrl ? '' : 'none';
     });
-    document.querySelectorAll('[data-footer-rural-stay-mark]').forEach(function (img) {
-      if (!markUrl) {
-        img.removeAttribute('src');
-        return;
-      }
-      img.src = markUrl;
-      img.alt = (mark.description && String(mark.description).trim()) || '농어촌민박사업자';
+    document.querySelectorAll('[data-footer-rural-stay-mark-wrap]').forEach(function (wrap) {
+      var images = wrap.querySelectorAll('[data-footer-rural-stay-mark]');
+      var count = marks.filter(function (mark) { return mark && mark.url; }).length;
+      images.forEach(function (img, index) {
+        var mark = marks[index];
+        var url = mark && mark.url ? String(mark.url) : '';
+        img.style.display = url ? 'inline-block' : 'none';
+        img.style.maxWidth = count > 1 ? 'calc((100% - 12px) / 2)' : '';
+        img.style.marginLeft = index && url && marks[0] && marks[0].url ? '12px' : '';
+        if (!url) {
+          img.removeAttribute('src');
+          return;
+        }
+        img.src = url;
+        img.alt = (mark.description && String(mark.description).trim()) || '농어촌민박사업자';
+      });
     });
   };
 
