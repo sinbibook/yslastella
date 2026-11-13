@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "version": "1.16.0",
-    "generatedAt": "2026-11-10T01:02:08.301189079Z",
+    "version": "1.17.0",
+    "generatedAt": "2026-11-13T01:21:48.308526865Z",
     "templateType": "trip_d",
     "propertyId": "27fda8e7-f9c1-4b56-bfae-a5c966e196cd",
     "homepageId": "01a1584f-9fbd-7547-bf24-196f56ea7264"
@@ -2030,13 +2030,13 @@
                 "url": "https://jlnjajtcnyqupfaqjerz.supabase.co/storage/v1/object/public/app-images/homepage/01a1584f-9fbd-7547-bf24-196f56ea7264/popup/1792482981068-7hkx5m16jm.jpg",
                 "sortOrder": 1,
                 "description": "",
-                "isSelected": true,
+                "isSelected": false,
                 "blockId": "ca60db71-40a5-428e-a532-e38ef7d4f971"
               }
             ],
             "slider": false,
             "videos": [ ],
-            "enabled": true,
+            "enabled": false,
             "endDate": null,
             "sortOrder": 1,
             "startDate": null,
@@ -2921,7 +2921,17 @@
           "description": "",
           "isSelected": true,
           "blockId": null
-        }
+        },
+        "ruralStayMarks": [
+          {
+            "id": "01a162ef-3926-7168-99f5-5e5a72857226",
+            "url": "https://jlnjajtcnyqupfaqjerz.supabase.co/storage/v1/object/public/app-images/homepage/01a1584f-9fbd-7547-bf24-196f56ea7264/rural_stay_mark/1792661204959-dlfbtbvssj.png",
+            "sortOrder": 0,
+            "description": "",
+            "isSelected": true,
+            "blockId": null
+          }
+        ]
       }
     }
   }
