@@ -10,6 +10,15 @@
       .replace(/\n/g, '<br />');
   }
 
+  // 공백·줄바꿈 차이를 무시하고 haystack 안에 needle 이 들어 있는지 본다
+  function containsText(haystack, needle) {
+    if (!haystack || !needle) return false;
+    var norm = function (s) { return String(s).replace(/\s+/g, ''); };
+    return norm(haystack).indexOf(norm(needle)) !== -1;
+  }
+
+  var CHECKIN_LABEL = '[입퇴실안내]';
+
   function ReservationMapper() {
     BaseDataMapper.call(this);
   }
@@ -73,16 +82,35 @@
     });
   };
 
-  // MAPPER: property.checkin/checkout/checkInOutInfo → [data-reservation-checkin-info] ([입퇴실안내] 라벨 + 내용)
+  // MAPPER: property.checkInOutInfo (없으면 checkin/checkout) → [data-reservation-checkin-info]
+  //
+  // ⚠️ 같은 [입퇴실안내] 가 여러 번 나오지 않게 한다.
+  //   - checkInOutInfo 가 있으면 그것만 쓴다. 보통 입실·퇴실 시간이 이미 들어 있어서
+  //     checkin/checkout 으로 만든 줄을 앞에 붙이면 두 번 나온다. 라벨이 없을 때만 붙인다.
+  //   - checkInOutInfo 가 없을 때만 checkin/checkout 으로 [입퇴실안내] 를 만든다.
+  //   - usageGuide 안에 이미 [입퇴실안내] 가 들어 있으면 (트립 숙소에 흔함) 이 칸은 비운다.
   ReservationMapper.prototype.mapCheckinInfo = function () {
     var el = document.querySelector('[data-reservation-checkin-info]');
     if (!el) return;
     var p = this.getProperty();
-    var lines = ['[입퇴실안내]'];
-    if (p.checkin) lines.push('- 입실: ' + p.checkin);
-    if (p.checkout) lines.push('- 퇴실: ' + p.checkout);
-    var html = lines.join('\n');
-    if (p.checkInOutInfo) html += '\n' + p.checkInOutInfo;
+    var usage = (p.usageGuide || '').trim();
+    var info = (p.checkInOutInfo || '').trim();
+    var html = '';
+    if (info) {
+      html = info.indexOf(CHECKIN_LABEL) === -1 ? CHECKIN_LABEL + '\n' + info : info;
+    } else if (p.checkin || p.checkout) {
+      var lines = [CHECKIN_LABEL];
+      if (p.checkin) lines.push('- 입실: ' + p.checkin);
+      if (p.checkout) lines.push('- 퇴실: ' + p.checkout);
+      html = lines.join('\n');
+    }
+    var dup = containsText(usage, info) || (!info && usage.indexOf(CHECKIN_LABEL) !== -1);
+    if (!html || dup) {
+      el.innerHTML = '';
+      el.style.display = 'none';
+      return;
+    }
+    el.style.display = '';
     el.innerHTML = nl2br(html);
   };
 
@@ -90,16 +118,21 @@
   ReservationMapper.prototype.mapUsageGuide = function () {
     var el = document.querySelector('[data-reservation-usage-guide]');
     if (!el) return;
-    var guide = this.getProperty().usageGuide || '';
+    var guide = (this.getProperty().usageGuide || '').trim();
     el.innerHTML = guide ? nl2br(guide) : '';
+    el.style.display = guide ? '' : 'none';
   };
 
   // MAPPER: property.reservationGuide → [data-reservation-reservation-guide]
+  //   usageGuide 안에 같은 내용이 이미 있으면 (공지사항이 통째로 겹치는 경우가 흔함) 비운다.
   ReservationMapper.prototype.mapReservationGuide = function () {
     var el = document.querySelector('[data-reservation-reservation-guide]');
     if (!el) return;
-    var guide = this.getProperty().reservationGuide || '';
+    var p = this.getProperty();
+    var guide = (p.reservationGuide || '').trim();
+    if (containsText(p.usageGuide, guide)) guide = '';
     el.innerHTML = guide ? nl2br(guide) : '';
+    el.style.display = guide ? '' : 'none';
   };
 
   // MAPPER: property.refundPolicies → [data-reservation-refund-policies] (동적 생성)

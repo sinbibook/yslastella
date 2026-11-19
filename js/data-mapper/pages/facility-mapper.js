@@ -158,13 +158,14 @@
     }
   };
 
-  // MAPPER: facilities[current].images → [data-facility-gallery] (li p배경 순서대로)
+  // MAPPER: facilities[current].images[1..] → [data-facility-gallery] (조각컷 li p배경 순서대로)
+  // 첫 장(images[0])은 위 타원형 칸이 쓰므로 조각컷은 2번째 사진부터 채운다 (2·3번째).
   FacilityMapper.prototype.mapGallery = function () {
     var gallery = document.querySelector('[data-facility-gallery]');
     if (!gallery) return;
     var images = this.getFacilityImages(this.getCurrentFacility());
     gallery.querySelectorAll('li .img p').forEach(function (p, i) {
-      var img = images[i];
+      var img = images[i + 1];
       if (img && img.url) {
         p.style.backgroundImage = 'url(' + img.url + ')';
       } else {
