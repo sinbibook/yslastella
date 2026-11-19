@@ -74,11 +74,22 @@
     this.updateMetaTags();
   };
 
-  // 숙소 대표이미지: property.images[0].thumbnail[isSelected][0] (없으면 exterior)
+  // 숙소 대표이미지 (전체메뉴 배경). 홈페이지설정에서 올린 사진을 숙소설정 사진보다 먼저 쓴다.
+  //   1. homepage.customFields.property.images[category=property_thumbnail]  ← 홈페이지설정 썸네일
+  //   2. property.images[0].thumbnail                                        ← 숙소설정 썸네일
+  //   3. homepage.customFields.property.images[category=property_exterior]   ← 홈페이지설정 외경
+  //   4. property.images[0].exterior                                         ← 숙소설정 외경
+  // ⚠️ 예전에는 2·4 만 읽어서 홈페이지설정에서 썸네일을 바꿔도 배경이 그대로였다.
   HeaderFooterMapper.prototype.getRepresentativeImage = function () {
     var images = (this.getProperty().images || [])[0] || {};
+    var cfImages = (this.getCustomFields().property || {}).images || [];
+    var byCategory = function (category) {
+      return cfImages.filter(function (img) { return img && img.category === category; });
+    };
     return (
+      this.getFirstSelectedImage(byCategory('property_thumbnail')) ||
       this.getFirstSelectedImage(images.thumbnail || []) ||
+      this.getFirstSelectedImage(byCategory('property_exterior')) ||
       this.getFirstSelectedImage(images.exterior || [])
     );
   };
